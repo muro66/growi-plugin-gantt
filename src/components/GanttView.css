@@ -18,3 +18,11 @@
 .grw-gantt-view svg {
   width: 100%;
 }
+
+.grw-gantt-view-custom-color {
+  --g-bar-color: var(--grw-gantt-bar-fill, #4fc3f7);
+  --g-bar-border: var(--grw-gantt-bar-fill, #4fc3f7);
+}
+.grw-gantt-view-custom-color .bar {
+  fill: var(--grw-gantt-bar-fill, #4fc3f7);
+}

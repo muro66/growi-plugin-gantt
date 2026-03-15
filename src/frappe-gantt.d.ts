@@ -5,6 +5,7 @@ declare module 'frappe-gantt' {
     start: string;
     end: string;
     progress: number;
+    custom_class?: string;
   }
 
   interface GanttPopupContext {
@@ -24,6 +25,7 @@ declare module 'frappe-gantt' {
     language?: string;
     popup_on?: 'click' | 'hover';
     popup?: (ctx: GanttPopupContext) => void | false;
+    scroll_to?: string;
   }
 
   export default class Gantt {

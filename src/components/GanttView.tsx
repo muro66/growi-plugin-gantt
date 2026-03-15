@@ -16,11 +16,19 @@ interface GanttTask {
 
 interface GanttViewProps {
   tickets: Ticket[];
+  chartDateFrom?: string;
+  chartDateTo?: string;
+  barColor?: string;
 }
 
-export default function GanttView({ tickets }: GanttViewProps) {
+export default function GanttView({ tickets, chartDateFrom, barColor = '#4fc3f7' }: GanttViewProps) {
   const containerRef = React.useRef<HTMLDivElement>(null);
+  const wrapperRef = React.useRef<HTMLDivElement>(null);
   const ganttRef = React.useRef<InstanceType<typeof Gantt> | null>(null);
+
+  React.useEffect(() => {
+    if (wrapperRef.current) wrapperRef.current.style.setProperty('--grw-gantt-bar-fill', barColor);
+  }, [barColor]);
 
   const tasks: GanttTask[] = React.useMemo(() => {
     return tickets
@@ -46,6 +54,7 @@ export default function GanttView({ tickets }: GanttViewProps) {
         date_format: 'YYYY-MM-DD',
         language: 'ja',
         popup_on: 'click',
+        scroll_to: chartDateFrom || 'today',
         popup: (ctx) => {
           ctx.set_title(ctx.task.name);
           ctx.set_subtitle(`${ctx.task.start} ～ ${ctx.task.end}`);
@@ -62,7 +71,7 @@ export default function GanttView({ tickets }: GanttViewProps) {
     return () => {
       ganttRef.current = null;
     };
-  }, [tasks]);
+  }, [tasks, chartDateFrom]);
 
   if (tasks.length === 0) {
     return (
@@ -75,7 +84,7 @@ export default function GanttView({ tickets }: GanttViewProps) {
   }
 
   return (
-    <div className="grw-gantt-view">
+    <div className="grw-gantt-view grw-gantt-view-custom-color" ref={wrapperRef}>
       <div id="grw-gantt-chart" ref={containerRef} />
     </div>
   );

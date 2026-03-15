@@ -3,11 +3,19 @@ import TicketList from './TicketList';
 import GanttView from './GanttView';
 import type { Ticket } from '../types';
 import type { TicketMeta } from '../types';
+import { TICKET_STATUSES } from '../types';
 import { fetchPagesUnderPath, fetchPageByPath, updatePageBody } from '../api';
 import { parseTicketMeta, setTicketMetaInBody } from '../ticketMeta';
 import './Panel.css';
 
 const DEFAULT_TICKETS_PATH = '/tickets';
+const BAR_COLOR_PRESETS: { value: string; label: string }[] = [
+  { value: '#4fc3f7', label: '水色' },
+  { value: '#81c784', label: '緑' },
+  { value: '#ffb74d', label: 'オレンジ' },
+  { value: '#e57373', label: '赤' },
+  { value: '#ba68c8', label: '紫' },
+];
 
 type TabId = 'tickets' | 'gantt';
 
@@ -17,6 +25,13 @@ export default function Panel({ onClose }: { onClose: () => void }) {
   const [tickets, setTickets] = React.useState<Ticket[]>([]);
   const [loading, setLoading] = React.useState(true);
   const [error, setError] = React.useState<string | null>(null);
+  const [filterStatus, setFilterStatus] = React.useState<string>('');
+  const [filterAssignee, setFilterAssignee] = React.useState('');
+  const [filterDateFrom, setFilterDateFrom] = React.useState('');
+  const [filterDateTo, setFilterDateTo] = React.useState('');
+  const [chartDateFrom, setChartDateFrom] = React.useState('');
+  const [chartDateTo, setChartDateTo] = React.useState('');
+  const [barColor, setBarColor] = React.useState(BAR_COLOR_PRESETS[0].value);
 
   const loadTickets = React.useCallback(async () => {
     setLoading(true);
@@ -68,6 +83,16 @@ export default function Panel({ onClose }: { onClose: () => void }) {
     [tickets]
   );
 
+  const filteredTickets = React.useMemo(() => {
+    return tickets.filter((t) => {
+      if (filterStatus && t.meta.status !== filterStatus) return false;
+      if (filterAssignee && !(t.meta.assignee || '').toLowerCase().includes(filterAssignee.toLowerCase())) return false;
+      if (filterDateFrom && (t.meta.startDate || '') < filterDateFrom) return false;
+      if (filterDateTo && (t.meta.dueDate || '') > filterDateTo) return false;
+      return true;
+    });
+  }, [tickets, filterStatus, filterAssignee, filterDateFrom, filterDateTo]);
+
   return (
     <div className="grw-gantt-panel" role="dialog" aria-label="チケット・ガント">
       <header className="grw-gantt-panel-header">
@@ -94,16 +119,88 @@ export default function Panel({ onClose }: { onClose: () => void }) {
         </div>
       </header>
       <div className="grw-gantt-panel-body">
+        <div className="grw-gantt-filters">
+          <span className="grw-gantt-filter-label">状態</span>
+          <select
+            className="grw-gantt-select grw-gantt-filter-select"
+            value={filterStatus}
+            onChange={(e) => setFilterStatus(e.target.value)}
+          >
+            <option value="">すべて</option>
+            {TICKET_STATUSES.map((s) => (
+              <option key={s} value={s}>{s}</option>
+            ))}
+          </select>
+          <span className="grw-gantt-filter-label">担当</span>
+          <input
+            type="text"
+            className="grw-gantt-filter-input"
+            placeholder="絞り込み"
+            value={filterAssignee}
+            onChange={(e) => setFilterAssignee(e.target.value)}
+          />
+          <span className="grw-gantt-filter-label">開始日～</span>
+          <input
+            type="date"
+            className="grw-gantt-filter-input"
+            value={filterDateFrom}
+            onChange={(e) => setFilterDateFrom(e.target.value)}
+          />
+          <span className="grw-gantt-filter-label">～期日</span>
+          <input
+            type="date"
+            className="grw-gantt-filter-input"
+            value={filterDateTo}
+            onChange={(e) => setFilterDateTo(e.target.value)}
+          />
+          {tab === 'gantt' && (
+            <>
+              <span className="grw-gantt-filter-label">チャート範囲</span>
+              <input
+                type="date"
+                className="grw-gantt-filter-input"
+                value={chartDateFrom}
+                onChange={(e) => setChartDateFrom(e.target.value)}
+                title="表示開始日"
+              />
+              <span>～</span>
+              <input
+                type="date"
+                className="grw-gantt-filter-input"
+                value={chartDateTo}
+                onChange={(e) => setChartDateTo(e.target.value)}
+                title="表示終了日"
+              />
+              <span className="grw-gantt-filter-label">バー色</span>
+              <select
+                className="grw-gantt-select grw-gantt-filter-select"
+                value={barColor}
+                onChange={(e) => setBarColor(e.target.value)}
+              >
+                {BAR_COLOR_PRESETS.map((p) => (
+                  <option key={p.value} value={p.value}>{p.label}</option>
+                ))}
+              </select>
+            </>
+          )}
+        </div>
         {loading && <div className="grw-gantt-loading">読み込み中...</div>}
         {error && <div className="grw-gantt-error">{error}</div>}
         {!loading && !error && tab === 'tickets' && (
           <TicketList
-            tickets={tickets}
+            tickets={filteredTickets}
             onMetaChange={handleMetaChange}
             ticketsPath={ticketsPath}
           />
         )}
-        {!loading && !error && tab === 'gantt' && <GanttView tickets={tickets} />}
+        {!loading && !error && tab === 'gantt' && (
+          <GanttView
+            tickets={filteredTickets}
+            chartDateFrom={chartDateFrom || undefined}
+            chartDateTo={chartDateTo || undefined}
+            barColor={barColor}
+          />
+        )}
       </div>
     </div>
   );

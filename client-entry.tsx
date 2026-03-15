@@ -35,8 +35,9 @@ function createButton(id: string): HTMLButtonElement {
   btn.id = id;
   btn.type = 'button';
   btn.className = 'btn btn-outline-secondary grw-gantt-sidebar-btn';
-  btn.innerHTML = '📊 チケット・ガント';
   btn.setAttribute('aria-label', 'チケット・ガントを開く');
+  btn.title = 'チケット・ガントを開く';
+  btn.innerHTML = '<span class="grw-gantt-sidebar-icon" aria-hidden="true">📊</span>';
   btn.style.marginTop = '0.5rem';
   btn.style.marginLeft = '0.25rem';
   btn.style.marginRight = '0.25rem';
