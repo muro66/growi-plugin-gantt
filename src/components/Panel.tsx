@@ -33,7 +33,8 @@ export default function Panel({ onClose }: { onClose: () => void }) {
   const [chartDateFrom, setChartDateFrom] = React.useState('');
   const [chartDateTo, setChartDateTo] = React.useState('');
   const [barColor, setBarColor] = React.useState(BAR_COLOR_PRESETS[0].value);
-  const [viewMode, setViewMode] = React.useState<'Day' | 'Week'>('Day');
+  const [viewMode, setViewMode] = React.useState<'Day' | 'Week' | 'Month'>('Week');
+  const [listViewMode, setListViewMode] = React.useState<'table' | 'cards'>('table');
 
   const loadTickets = React.useCallback(async () => {
     setLoading(true);
@@ -167,14 +168,35 @@ export default function Panel({ onClose }: { onClose: () => void }) {
           {tab === 'gantt' && (
             <>
               <span className="grw-gantt-filter-label">ビュー</span>
-              <select
-                className="grw-gantt-select grw-gantt-filter-select"
-                value={viewMode}
-                onChange={(e) => setViewMode(e.target.value === 'Week' ? 'Week' : 'Day')}
-              >
-                <option value="Day">日単位</option>
-                <option value="Week">週単位</option>
-              </select>
+              <div className="grw-gantt-view-zoom">
+                <button
+                  type="button"
+                  className="grw-gantt-btn grw-gantt-btn-sm grw-gantt-zoom-btn"
+                  onClick={() => setViewMode((m) => (m === 'Month' ? 'Week' : 'Day'))}
+                  title="ズームイン（細かく）"
+                  aria-label="ズームイン"
+                >
+                  ＋
+                </button>
+                <select
+                  className="grw-gantt-select grw-gantt-filter-select"
+                  value={viewMode}
+                  onChange={(e) => setViewMode(e.target.value as 'Day' | 'Week' | 'Month')}
+                >
+                  <option value="Day">日</option>
+                  <option value="Week">週</option>
+                  <option value="Month">月</option>
+                </select>
+                <button
+                  type="button"
+                  className="grw-gantt-btn grw-gantt-btn-sm grw-gantt-zoom-btn"
+                  onClick={() => setViewMode((m) => (m === 'Day' ? 'Week' : 'Month'))}
+                  title="ズームアウト（長期表示）"
+                  aria-label="ズームアウト"
+                >
+                  −
+                </button>
+              </div>
               <span className="grw-gantt-filter-label">チャート範囲</span>
               <input
                 type="date"
@@ -207,11 +229,31 @@ export default function Panel({ onClose }: { onClose: () => void }) {
         {loading && <div className="grw-gantt-loading">読み込み中...</div>}
         {error && <div className="grw-gantt-error">{error}</div>}
         {!loading && !error && tab === 'tickets' && (
-          <TicketList
-            tickets={filteredTickets}
-            onMetaChange={handleMetaChange}
-            ticketsPath={ticketsPath}
-          />
+          <>
+            <div className="grw-gantt-list-view-toggle">
+              <span className="grw-gantt-filter-label">表示</span>
+              <button
+                type="button"
+                className={'grw-gantt-btn grw-gantt-btn-sm' + (listViewMode === 'table' ? ' is-active' : '')}
+                onClick={() => setListViewMode('table')}
+              >
+                表
+              </button>
+              <button
+                type="button"
+                className={'grw-gantt-btn grw-gantt-btn-sm' + (listViewMode === 'cards' ? ' is-active' : '')}
+                onClick={() => setListViewMode('cards')}
+              >
+                カード
+              </button>
+            </div>
+            <TicketList
+              tickets={filteredTickets}
+              onMetaChange={handleMetaChange}
+              ticketsPath={ticketsPath}
+              listViewMode={listViewMode}
+            />
+          </>
         )}
         {!loading && !error && tab === 'gantt' && (
           <GanttView

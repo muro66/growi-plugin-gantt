@@ -1,0 +1,111 @@
+.grw-gantt-cards-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem 1.25rem;
+  padding: 0.5rem 0;
+}
+
+.grw-gantt-cards-group {
+  --card-width: 200px;
+  min-width: var(--card-width);
+  max-width: 280px;
+  position: relative;
+  border-radius: 12px;
+  padding: 0.5rem 0;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.grw-gantt-cards-group.is-drop-target {
+  outline: 2px dashed rgba(79, 195, 247, 0.8);
+  outline-offset: 4px;
+  background: rgba(79, 195, 247, 0.08);
+}
+
+.grw-gantt-cards-group-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: rgba(232, 234, 246, 0.9);
+  margin-bottom: 0.5rem;
+  padding-left: 0.25rem;
+}
+
+.grw-gantt-cards-stack {
+  position: relative;
+  min-height: 70px;
+}
+
+.grw-gantt-cards-group.is-expanded .grw-gantt-cards-stack {
+  min-height: 0;
+}
+
+.grw-gantt-card {
+  position: absolute;
+  left: 0;
+  right: 0;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0.6rem 0.75rem;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  cursor: grab;
+  transition: transform 0.15s ease-out, box-shadow 0.15s ease-out, border-color 0.15s ease-out;
+  z-index: 0;
+  top: calc(var(--stack-i, 0) * 16px);
+}
+
+.grw-gantt-card:hover {
+  transform: scale(1.02);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+  border-color: rgba(79, 195, 247, 0.4);
+  z-index: 2;
+}
+
+.grw-gantt-card.is-dragging {
+  opacity: 0.9;
+  cursor: grabbing;
+  z-index: 100;
+  transform: scale(1.03);
+}
+
+.grw-gantt-cards-group.is-expanded .grw-gantt-card {
+  position: relative;
+  top: auto;
+  margin-bottom: 0.5rem;
+}
+
+.grw-gantt-cards-group.is-expanded .grw-gantt-card:hover {
+  transform: scale(1.02);
+}
+
+.grw-gantt-card-title {
+  display: block;
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: #4fc3f7;
+  text-decoration: none;
+  margin-bottom: 0.35rem;
+  word-break: break-word;
+}
+
+.grw-gantt-card-title:hover {
+  text-decoration: underline;
+}
+
+.grw-gantt-card-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  font-size: 0.75rem;
+  color: rgba(232, 234, 246, 0.85);
+}
+
+.grw-gantt-card-select {
+  width: 100%;
+  max-width: 140px;
+  padding: 0.2rem 0.4rem;
+  font-size: 0.75rem;
+}

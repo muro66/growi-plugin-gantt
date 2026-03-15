@@ -1,15 +1,17 @@
 import type { Ticket } from '../types';
 import { buildPageUrl } from '../api';
 import { TICKET_STATUSES } from '../types';
+import TicketCards from './TicketCards';
 import './TicketList.css';
 
 interface TicketListProps {
   tickets: Ticket[];
   onMetaChange: (path: string, meta: Ticket['meta']) => void;
   ticketsPath: string;
+  listViewMode?: 'table' | 'cards';
 }
 
-export default function TicketList({ tickets, onMetaChange, ticketsPath }: TicketListProps) {
+export default function TicketList({ tickets, onMetaChange, ticketsPath, listViewMode = 'table' }: TicketListProps) {
   const handleStatusChange = (path: string, meta: Ticket['meta'], newStatus: string) => {
     onMetaChange(path, { ...meta, status: newStatus });
   };
@@ -29,6 +31,8 @@ export default function TicketList({ tickets, onMetaChange, ticketsPath }: Ticke
       </div>
       {tickets.length === 0 ? (
         <p className="grw-gantt-empty">チケットがありません。上記リンクから /tickets 配下にページを作成してください。</p>
+      ) : listViewMode === 'cards' ? (
+        <TicketCards tickets={tickets} onMetaChange={onMetaChange} ticketsPath={ticketsPath} />
       ) : (
         <table className="grw-gantt-table">
           <thead>
@@ -74,3 +78,4 @@ export default function TicketList({ tickets, onMetaChange, ticketsPath }: Ticke
     </div>
   );
 }
+

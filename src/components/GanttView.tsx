@@ -18,10 +18,10 @@ interface GanttViewProps {
   tickets: Ticket[];
   chartDateFrom?: string;
   barColor?: string;
-  viewMode?: 'Day' | 'Week';
+  viewMode?: 'Day' | 'Week' | 'Month';
 }
 
-export default function GanttView({ tickets, chartDateFrom, barColor = '#4fc3f7', viewMode = 'Day' }: GanttViewProps) {
+export default function GanttView({ tickets, chartDateFrom, barColor = '#4fc3f7', viewMode = 'Week' }: GanttViewProps) {
   const containerRef = React.useRef<HTMLDivElement>(null);
   const wrapperRef = React.useRef<HTMLDivElement>(null);
   const ganttRef = React.useRef<InstanceType<typeof Gantt> | null>(null);
@@ -71,7 +71,7 @@ export default function GanttView({ tickets, chartDateFrom, barColor = '#4fc3f7'
     return () => {
       ganttRef.current = null;
     };
-  }, [tasks, chartDateFrom]);
+  }, [tasks, chartDateFrom, viewMode]);
 
   if (tasks.length === 0) {
     return (
