@@ -51,7 +51,8 @@ export default function GanttView({ tickets }: GanttViewProps) {
           ctx.set_subtitle(`${ctx.task.start} ～ ${ctx.task.end}`);
           ctx.set_details(`進捗: ${ctx.task.progress}%`);
           ctx.add_action('ページを開く', () => {
-            window.open(buildPageUrl(ctx.task.id), '_blank');
+            const ticket = tickets.find((x) => x.path === ctx.task.id);
+            window.open(buildPageUrl(ctx.task.id, ticket?.pageId), '_blank');
           });
         },
       });

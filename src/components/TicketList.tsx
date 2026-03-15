@@ -45,7 +45,7 @@ export default function TicketList({ tickets, onMetaChange, ticketsPath }: Ticke
             {tickets.map((t) => (
               <tr key={t.path}>
                 <td>
-                  <a href={buildPageUrl(t.path)} target="_blank" rel="noopener noreferrer">
+                  <a href={buildPageUrl(t.path, t.pageId)} target="_blank" rel="noopener noreferrer">
                     {t.title || t.path}
                   </a>
                 </td>
