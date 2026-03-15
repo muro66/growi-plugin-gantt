@@ -1,0 +1,20 @@
+.grw-gantt-view {
+  padding: 0.5rem 0;
+  min-height: 200px;
+}
+
+.grw-gantt-view .grw-gantt-empty {
+  padding: 1.5rem;
+  text-align: center;
+  color: rgba(232, 234, 246, 0.8);
+  font-size: 0.9rem;
+}
+
+.grw-gantt-view .grw-gantt-error {
+  color: #ef9a9a;
+  padding: 1rem;
+}
+
+.grw-gantt-view svg {
+  width: 100%;
+}
