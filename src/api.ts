@@ -14,7 +14,7 @@ export async function fetchPagesUnderPath(path: string): Promise<PagesListRespon
 /**
  * GROWI の URL 構造（v5 以降）:
  * - パーマリンク（ID形式）: https://example.com/:pageId （推奨・ページ名変更に不変）
- * - パス形式: https://example.com/page/:path （パスで開く場合。一部インスタンスでは /page/ なしの /path もあり）
+ * - パス形式: https://example.com/:path （パスで開く場合）
  * @see https://docs.growi.org/ja/guide/features/copy_to_clipboard.html
  */
 export function getCurrentPath(): string {
@@ -41,10 +41,10 @@ export function buildPageUrl(path: string, pageId?: string): string {
   if (pageId && /^[0-9a-f]{24}$/i.test(pageId)) {
     return `${origin}/${pageId}`;
   }
-  // パス形式: /page/Path/To/Page（ID がない場合・新規リンク等）
+  // パス形式: /Path/To/Page（ID がない場合・新規リンク等）
   const segments = path.split('/').filter((s) => s !== undefined && s !== '');
   const encoded = segments.map((s) => encodeURIComponent(s)).join('/');
-  return `${origin}/page/${encoded}`;
+  return `${origin}/${encoded}`;
 }
 
 export async function fetchPageByPath(path: string): Promise<GrowiPage | null> {

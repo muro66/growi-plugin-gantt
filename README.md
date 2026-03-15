@@ -37,7 +37,7 @@ Redmine 風の**チケット一覧**と**ガントチャート**を GROWI で使
 ## リンクについて
 
 - GROWI v5 以降は **パーマリンク（ID形式）** が標準です（例: `https://example.com/69b6b1a9060f0eb374bcc7e6`）。ページ名を変更してもリンクが変わらないため、チケット一覧・ガントからのリンクは **pageId があるときはパーマリンク** を使います。
-- pageId がない場合（例: 新規チケット用の `/page/tickets/new`）は **パス形式** の URL を使用します。
+- pageId がない場合（例: 新規チケット用の `/tickets/new`）は **パス形式** の URL を使用します。
 - 参考: [パスや URL をクリップボードにコピーする | GROWI Docs](https://docs.growi.org/ja/guide/features/copy_to_clipboard.html)
 
 ## チケットのメタ（ticket-meta）
