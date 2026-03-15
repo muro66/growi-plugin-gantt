@@ -26,12 +26,14 @@ export default function Panel({ onClose }: { onClose: () => void }) {
   const [loading, setLoading] = React.useState(true);
   const [error, setError] = React.useState<string | null>(null);
   const [filterStatus, setFilterStatus] = React.useState<string>('');
+  const [filterProject, setFilterProject] = React.useState('');
   const [filterAssignee, setFilterAssignee] = React.useState('');
   const [filterDateFrom, setFilterDateFrom] = React.useState('');
   const [filterDateTo, setFilterDateTo] = React.useState('');
   const [chartDateFrom, setChartDateFrom] = React.useState('');
   const [chartDateTo, setChartDateTo] = React.useState('');
   const [barColor, setBarColor] = React.useState(BAR_COLOR_PRESETS[0].value);
+  const [viewMode, setViewMode] = React.useState<'Day' | 'Week'>('Day');
 
   const loadTickets = React.useCallback(async () => {
     setLoading(true);
@@ -50,7 +52,7 @@ export default function Panel({ onClose }: { onClose: () => void }) {
           id: path,
           path,
           title: full?.title ?? p.title ?? path.split('/').pop() ?? '',
-          meta: meta ?? { status: 'New', assignee: '', startDate: '', dueDate: '', progress: 0 },
+          meta: meta ?? { status: 'New', project: '', assignee: '', startDate: '', dueDate: '', progress: 0 },
           body: body,
           pageId: full?.id,
           revisionId: full?.revision?.id,
@@ -86,12 +88,13 @@ export default function Panel({ onClose }: { onClose: () => void }) {
   const filteredTickets = React.useMemo(() => {
     return tickets.filter((t) => {
       if (filterStatus && t.meta.status !== filterStatus) return false;
+      if (filterProject && !(t.meta.project || '').toLowerCase().includes(filterProject.toLowerCase())) return false;
       if (filterAssignee && !(t.meta.assignee || '').toLowerCase().includes(filterAssignee.toLowerCase())) return false;
       if (filterDateFrom && (t.meta.startDate || '') < filterDateFrom) return false;
       if (filterDateTo && (t.meta.dueDate || '') > filterDateTo) return false;
       return true;
     });
-  }, [tickets, filterStatus, filterAssignee, filterDateFrom, filterDateTo]);
+  }, [tickets, filterStatus, filterProject, filterAssignee, filterDateFrom, filterDateTo]);
 
   return (
     <div className="grw-gantt-panel" role="dialog" aria-label="チケット・ガント">
@@ -131,6 +134,14 @@ export default function Panel({ onClose }: { onClose: () => void }) {
               <option key={s} value={s}>{s}</option>
             ))}
           </select>
+          <span className="grw-gantt-filter-label">Project</span>
+          <input
+            type="text"
+            className="grw-gantt-filter-input"
+            placeholder="プロジェクト名で絞り込み"
+            value={filterProject}
+            onChange={(e) => setFilterProject(e.target.value)}
+          />
           <span className="grw-gantt-filter-label">担当</span>
           <input
             type="text"
@@ -155,6 +166,15 @@ export default function Panel({ onClose }: { onClose: () => void }) {
           />
           {tab === 'gantt' && (
             <>
+              <span className="grw-gantt-filter-label">ビュー</span>
+              <select
+                className="grw-gantt-select grw-gantt-filter-select"
+                value={viewMode}
+                onChange={(e) => setViewMode(e.target.value === 'Week' ? 'Week' : 'Day')}
+              >
+                <option value="Day">日単位</option>
+                <option value="Week">週単位</option>
+              </select>
               <span className="grw-gantt-filter-label">チャート範囲</span>
               <input
                 type="date"
@@ -197,8 +217,8 @@ export default function Panel({ onClose }: { onClose: () => void }) {
           <GanttView
             tickets={filteredTickets}
             chartDateFrom={chartDateFrom || undefined}
-            chartDateTo={chartDateTo || undefined}
             barColor={barColor}
+            viewMode={viewMode}
           />
         )}
       </div>

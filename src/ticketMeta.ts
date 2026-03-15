@@ -11,6 +11,7 @@ export function parseTicketMeta(body: string | undefined): TicketMeta | null {
     const o = JSON.parse(m[1].trim()) as Partial<TicketMeta>;
     return {
       status: o.status ?? DEFAULT_META.status,
+      project: o.project ?? DEFAULT_META.project,
       assignee: o.assignee ?? DEFAULT_META.assignee,
       startDate: o.startDate ?? DEFAULT_META.startDate,
       dueDate: o.dueDate ?? DEFAULT_META.dueDate,

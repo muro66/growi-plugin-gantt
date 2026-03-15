@@ -34,6 +34,7 @@ export default function TicketList({ tickets, onMetaChange, ticketsPath }: Ticke
           <thead>
             <tr>
               <th>タイトル</th>
+              <th>Project</th>
               <th>状態</th>
               <th>担当</th>
               <th>開始日</th>
@@ -49,6 +50,7 @@ export default function TicketList({ tickets, onMetaChange, ticketsPath }: Ticke
                     {t.title || t.path}
                   </a>
                 </td>
+                <td>{t.meta.project || '–'}</td>
                 <td>
                   <select
                     value={t.meta.status}

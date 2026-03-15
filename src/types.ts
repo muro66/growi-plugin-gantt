@@ -1,5 +1,6 @@
 export interface TicketMeta {
   status: string;
+  project?: string;
   assignee: string;
   startDate: string;
   dueDate: string;
@@ -34,6 +35,7 @@ export type TicketStatus = (typeof TICKET_STATUSES)[number];
 
 export const DEFAULT_META: TicketMeta = {
   status: 'New',
+  project: '',
   assignee: '',
   startDate: '',
   dueDate: '',

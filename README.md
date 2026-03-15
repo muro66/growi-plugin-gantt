@@ -46,13 +46,14 @@ Redmine 風の**チケット一覧**と**ガントチャート**を GROWI で使
 
 ````
 ```ticket-meta
-{"status":"New","assignee":"","startDate":"","dueDate":"","progress":0}
+{"status":"New","project":"","assignee":"","startDate":"","dueDate":"","progress":0}
 ```
 ````
 
 | キー | 説明 |
 |------|------|
 | `status` | 状態: `New` / `In Progress` / `Done` |
+| `project` | プロジェクト名（任意文字列） |
 | `assignee` | 担当者（任意文字列） |
 | `startDate` | 開始日（YYYY-MM-DD） |
 | `dueDate` | 期日（YYYY-MM-DD） |

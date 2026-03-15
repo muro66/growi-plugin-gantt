@@ -1,6 +1,6 @@
 .grw-gantt-view {
   padding: 0.5rem 0;
-  min-height: 200px;
+  min-height: 320px;
 }
 
 .grw-gantt-view .grw-gantt-empty {
@@ -17,6 +17,7 @@
 
 .grw-gantt-view svg {
   width: 100%;
+  min-height: 280px;
 }
 
 .grw-gantt-view-custom-color {

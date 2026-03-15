@@ -17,11 +17,11 @@ interface GanttTask {
 interface GanttViewProps {
   tickets: Ticket[];
   chartDateFrom?: string;
-  chartDateTo?: string;
   barColor?: string;
+  viewMode?: 'Day' | 'Week';
 }
 
-export default function GanttView({ tickets, chartDateFrom, barColor = '#4fc3f7' }: GanttViewProps) {
+export default function GanttView({ tickets, chartDateFrom, barColor = '#4fc3f7', viewMode = 'Day' }: GanttViewProps) {
   const containerRef = React.useRef<HTMLDivElement>(null);
   const wrapperRef = React.useRef<HTMLDivElement>(null);
   const ganttRef = React.useRef<InstanceType<typeof Gantt> | null>(null);
@@ -48,7 +48,7 @@ export default function GanttView({ tickets, chartDateFrom, barColor = '#4fc3f7'
     el.innerHTML = '';
     try {
       ganttRef.current = new Gantt('#grw-gantt-chart', tasks, {
-        view_mode: 'Day',
+        view_mode: viewMode,
         bar_height: 24,
         bar_corner_radius: 3,
         date_format: 'YYYY-MM-DD',
